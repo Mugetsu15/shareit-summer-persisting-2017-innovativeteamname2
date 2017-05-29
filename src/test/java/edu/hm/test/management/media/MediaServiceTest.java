@@ -1,4 +1,4 @@
-package edu.hm;
+package edu.hm.test.management.media;
 
 import org.junit.Assert;
 import org.junit.Before;

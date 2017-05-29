@@ -1,11 +1,20 @@
 package edu.hm.management.media;
 
+import javax.persistence.Entity;
+
 /**
  * Class represents a Book Object which has an author and an isbn.
  * @author Daniel Gabl
  *
  */
+@Entity
 public class Book extends Medium {
+    
+    /**
+     * UID.
+     */
+    private static final long serialVersionUID = -2139786114009746787L;
+
     /**
      * Author of this Book.
      */

@@ -1,11 +1,33 @@
 package edu.hm.management.user;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * Implementation of User Class.
  * @author Daniel Gabl
  *
  */
-public class User {
+//@Entity
+public class User implements Serializable  {
+    
+    /**
+     * UID.
+     */
+    private static final long serialVersionUID = 8630698348826097766L;
+
+    /**
+     * ID of User for Persistence.
+     */
+//    @Id
+//    @GeneratedValue(strategy=GenerationType.AUTO)
+//    @Column(name="USER_ID")
+    private long userID;
     
     /**
      * Name of the User.

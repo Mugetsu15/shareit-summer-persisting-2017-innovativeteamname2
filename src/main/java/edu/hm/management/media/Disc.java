@@ -1,12 +1,20 @@
 package edu.hm.management.media;
 
+import javax.persistence.Entity;
+
 /**
  * Class represents a Disc Object which has a barcode, a director and a fsk.
  * @author Daniel Gabl
  *
  */
+@Entity
 public class Disc extends Medium {
     
+    /**
+     * UID.
+     */
+    private static final long serialVersionUID = -5871968576317317803L;
+
     /**
      * Barcode of the Disc (unique).
      */

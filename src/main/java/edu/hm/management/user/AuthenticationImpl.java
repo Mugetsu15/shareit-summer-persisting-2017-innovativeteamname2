@@ -1,8 +1,6 @@
 package edu.hm.management.user;
 
 import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -53,20 +51,6 @@ public class AuthenticationImpl implements IAuthentication  {
     public void clearLibary()  {
         tokens.clear();
         logins.clear();
-    }
-    
-    /**
-     * Functions returns IP address of Caller.
-     * @return IP address of Caller
-     */
-    private String getIPaddr()  {
-        String addr = null;
-        try {
-            addr = InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        return addr;
     }
     
     /**

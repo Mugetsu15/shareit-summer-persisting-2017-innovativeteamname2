@@ -1,11 +1,33 @@
 package edu.hm.management.media;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * Class represents a Copy of a Medium which has a Medium Object and an owner.
  * @author Daniel Gabl
  *
  */
-public class Copy {
+@Entity
+public class Copy implements Serializable  {
+    
+    /**
+     * UID.
+     */
+    private static final long serialVersionUID = 6843857203681986574L;
+
+    /**
+     * ID of Copy for Persistence.
+     */
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name="COPY_ID")
+    private long copyID;
     
     /**
      * Medium which was copied.

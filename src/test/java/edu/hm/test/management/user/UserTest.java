@@ -1,4 +1,4 @@
-package edu.hm;
+package edu.hm.test.management.user;
 
 import static org.junit.Assert.*;
 

@@ -3,6 +3,15 @@ package edu.hm.management.bib;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+
+import edu.hm.management.bib.GuiceModule;
 import edu.hm.management.media.Book;
 import edu.hm.management.media.Disc;
 import edu.hm.management.media.Medium;
@@ -13,6 +22,13 @@ import edu.hm.management.media.Medium;
  *
  */
 public class MediaServiceImpl implements IMediaService {
+    
+    private static final Injector injector = Guice.createInjector(new GuiceModule());
+    
+    @Inject
+    private SessionFactory sessionFactory;
+    private Session entityManager;
+    private Transaction tx;
     
     /**
      * List to save all Books.
@@ -36,21 +52,23 @@ public class MediaServiceImpl implements IMediaService {
      * Default Constructor, only for Jackson.
      */
     public MediaServiceImpl()  {
-            Book bk1 = new Book("Author-909-4", "978-1-56619-909-4", "Title-909-4");
-            Book bk2 = new Book("Author-9462-6", "978-1-4028-9462-6", "Title-9462-6");
-            Book bk3 = new Book("Richard Castle", "978-3-8642-5007-1", "Heat Wave");
-            
-            Disc ds1 = new Disc("978-1-56619-909-4", "Director-909-4", Fsk.FSK12.getFsk(), "Title-909-4");
-            Disc ds2 = new Disc("978-1-4028-9462-6", "Director-9462-6", Fsk.FSK18.getFsk(), "Title-9462-6");
-            Disc ds3 = new Disc("8-88837-34272-8", "James Arthur", Fsk.FSK0.getFsk(), "Impossible");
-            
-            addBook(bk1);
-            addBook(bk2);
-            addBook(bk3);
-            
-            addDisc(ds1);
-            addDisc(ds2);
-            addDisc(ds3);
+        injector.injectMembers(this);
+        
+        Book bk1 = new Book("Author-909-4", "978-1-56619-909-4", "Title-909-4");
+        Book bk2 = new Book("Author-9462-6", "978-1-4028-9462-6", "Title-9462-6");
+        Book bk3 = new Book("Richard Castle", "978-3-8642-5007-1", "Heat Wave");
+        
+        Disc ds1 = new Disc("978-1-56619-909-4", "Director-909-4", Fsk.FSK12.getFsk(), "Title-909-4");
+        Disc ds2 = new Disc("978-1-4028-9462-6", "Director-9462-6", Fsk.FSK18.getFsk(), "Title-9462-6");
+        Disc ds3 = new Disc("8-88837-34272-8", "James Arthur", Fsk.FSK0.getFsk(), "Impossible");
+        
+        addBook(bk1);
+        addBook(bk2);
+        addBook(bk3);
+        
+        addDisc(ds1);
+        addDisc(ds2);
+        addDisc(ds3);
     }
     
     /**
@@ -128,6 +146,9 @@ public class MediaServiceImpl implements IMediaService {
                 if (!isbnExist)  {
                     if (checkISBN13(book.getIsbn()))  {
                         books.add(book);
+                        
+                        // Persistence
+                        persist(book);
                         return MediaServiceResult.OKAY;
                     }  else  {
                         return MediaServiceResult.ISBNBROKEN;
@@ -140,7 +161,7 @@ public class MediaServiceImpl implements IMediaService {
         }
         return MediaServiceResult.BADREQUEST;
     }
-
+    
     @Override
     public MediaServiceResult addDisc(Disc disc) {
         if (!disc.getDirector().isEmpty() && !disc.getBarcode().isEmpty() && !disc.getTitle().isEmpty()) {
@@ -155,6 +176,9 @@ public class MediaServiceImpl implements IMediaService {
                 if (!barcodeExists)  {
                     if (checkISBN13(disc.getBarcode()))  {
                         discs.add(disc);
+                        
+                        // Persistence
+                        persist(disc);
                         return MediaServiceResult.OKAY;
                     }  else  {
                         return MediaServiceResult.ISBNBROKEN;
@@ -207,9 +231,13 @@ public class MediaServiceImpl implements IMediaService {
                     MediaServiceResult result = MediaServiceResult.BADREQUEST;
                     
                     if (!title.equals(bk.getTitle()) || !author.equals(bk.getAuthor()))  {  // Data was modified
-                        books.remove(c);
+                        Book remove = books.remove(c);
                         Book newbook = new Book(author, book.getIsbn(), title);
                         result = addBook(newbook);
+                        
+                        // Persistance
+                        delete(remove);
+                        persist(newbook);
                     }
                     
                     return result;
@@ -249,9 +277,13 @@ public class MediaServiceImpl implements IMediaService {
                     MediaServiceResult result = MediaServiceResult.BADREQUEST;
                     
                     if (!director.equals(ds.getDirector()) || fsk != ds.getFsk() || !title.equals(ds.getTitle()))  {  // Data was modified
-                        discs.remove(c);
+                        Disc remove = discs.remove(c);
                         Disc newdisc = new Disc(disc.getBarcode(), director, fsk, title);
                         result = addDisc(newdisc);
+                        
+                        // Persistance
+                        delete(remove);
+                        persist(newdisc);
                     }
                     return result;
                 }
@@ -280,5 +312,30 @@ public class MediaServiceImpl implements IMediaService {
         return null;
     }
     
+    /**
+     * Persisting given Data.
+     * @param obj Object to persist.
+     */
+    private void persist(Object obj) {
+        entityManager = sessionFactory.getCurrentSession();
+        tx = entityManager.beginTransaction();
+        entityManager.persist(obj);
+        tx.commit();
+        
+        injector.getInstance(SessionFactory.class).close();
+    }
     
+    /**
+     * Deleting persisted Data..
+     * @param obj Object to delete.
+     */
+    private void delete(Object obj) {
+        entityManager = sessionFactory.getCurrentSession();
+        tx = entityManager.beginTransaction();
+        entityManager.delete(obj);
+        tx.commit();
+        
+        injector.getInstance(SessionFactory.class).close();
+    }
+
 }

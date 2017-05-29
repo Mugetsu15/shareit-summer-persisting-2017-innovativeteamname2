@@ -1,11 +1,37 @@
 package edu.hm.management.media;
 
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
+
 /**
  * Class represents a Medium Object which has a title.
  * @author Daniel Gabl
  *
  */
-public class Medium {
+@Entity
+@Table(name="TableMedium")
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+public class Medium implements Serializable{
+    
+    /**
+     * UID.
+     */
+    private static final long serialVersionUID = 2299215975687951843L;
+    
+    /**
+     * ID of Medium.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    private long id;
+    
     
     /**
      * Title of this Medium.
