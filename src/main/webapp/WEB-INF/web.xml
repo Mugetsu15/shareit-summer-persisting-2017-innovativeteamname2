@@ -29,6 +29,7 @@
         <init-param>  
           <param-name>jersey.config.server.provider.packages</param-name>  
          <param-value>edu.hm.management</param-value>
+         
          </init-param>
         <init-param>
           <param-name>jersey.config.server.provider.classnames</param-name>
@@ -36,20 +37,24 @@
         </init-param>
         <!--  Handle Errors http://javareferencegv.blogspot.de/2015/07/handle-invalid-json-request-by.html -->
         <init-param>
-	      <param-name>com.sun.jersey.config.property.packages</param-name>
-	      <param-value>org.gv.blog</param-value>
-	    </init-param>
-	    <init-param>
-	      <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
-	      <param-value>true</param-value>
-	    </init-param>
+          <param-name>com.sun.jersey.config.property.packages</param-name>
+          <param-value>org.gv.blog</param-value>
+        </init-param>
+        <init-param>
+          <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+          <param-value>true</param-value>
+        </init-param>
+        <init-param> 
+          <param-name>javax.ws.rs.Application</param-name> 
+          <param-value>edu.hm.ShareItApplication</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
     
     <listener>
-		<listener-class>edu.hm.ShareitServletContextListener</listener-class>
-	</listener>
-		
+        <listener-class>edu.hm.ShareitServletContextListener</listener-class>
+    </listener>
+        
     <servlet-mapping>
         <servlet-name>Media Resource</servlet-name>
         <url-pattern>/shareit/*</url-pattern>

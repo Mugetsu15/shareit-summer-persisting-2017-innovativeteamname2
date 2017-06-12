@@ -97,6 +97,14 @@
   <build>
     <finalName>shareit</finalName>
     <sourceDirectory>src/main/java</sourceDirectory>
+  <resources>
+  <resource>
+  <directory>src/main/java</directory>
+  <includes>
+<include>**/*.*</include>
+</includes>
+</resource>
+</resources>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -111,7 +119,7 @@
         <artifactId>heroku-maven-plugin</artifactId>
         <version>1.1.3</version>
         <configuration>
-          <appName>innovative-teamname-auth</appName>
+          <appName>innovative-teamname-persist</appName>
           <processTypes>
              <web>java $JAVA_OPTS -cp target/classes:target/dependency/* edu.hm.JettyStarter</web>
           </processTypes>
