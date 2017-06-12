@@ -11,7 +11,7 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
-import edu.hm.management.bib.GuiceModule;
+import edu.hm.GuiceModule;
 import edu.hm.management.media.Book;
 import edu.hm.management.media.Disc;
 import edu.hm.management.media.Medium;
@@ -322,7 +322,7 @@ public class MediaServiceImpl implements IMediaService {
         entityManager.persist(obj);
         tx.commit();
         
-        injector.getInstance(SessionFactory.class).close();
+        //injector.getInstance(SessionFactory.class).close();
     }
     
     /**
@@ -335,7 +335,7 @@ public class MediaServiceImpl implements IMediaService {
         entityManager.delete(obj);
         tx.commit();
         
-        injector.getInstance(SessionFactory.class).close();
+        //injector.getInstance(SessionFactory.class).close();
     }
 
 }

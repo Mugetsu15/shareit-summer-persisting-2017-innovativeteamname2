@@ -97,14 +97,14 @@
   <build>
     <finalName>shareit</finalName>
     <sourceDirectory>src/main/java</sourceDirectory>
-  <resources>
-  <resource>
-  <directory>src/main/java</directory>
-  <includes>
-<include>**/*.*</include>
-</includes>
-</resource>
-</resources>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.*</include>
+        </includes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>

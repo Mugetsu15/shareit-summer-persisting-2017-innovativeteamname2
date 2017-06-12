@@ -1,4 +1,4 @@
-package edu.hm.management.bib;
+package edu.hm;
 
 import com.google.inject.AbstractModule;
 import org.hibernate.SessionFactory;
