@@ -28,7 +28,7 @@ public class Book extends Medium {
     /**
      * Default Constructor for a Book Object, only for Jackson.
      */
-    private Book() {
+    Book() {
         this("John Doe", "0", null);
     }
        

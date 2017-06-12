@@ -23,12 +23,6 @@ import edu.hm.management.media.Medium;
  */
 public class MediaServiceImpl implements IMediaService {
     
-    private static final Injector injector = Guice.createInjector(new GuiceModule());
-    
-    @Inject
-    private SessionFactory sessionFactory;
-    private Session entityManager;
-    private Transaction tx;
     
     /**
      * List to save all Books.
@@ -52,8 +46,6 @@ public class MediaServiceImpl implements IMediaService {
      * Default Constructor, only for Jackson.
      */
     public MediaServiceImpl()  {
-        injector.injectMembers(this);
-        
         Book bk1 = new Book("Author-909-4", "978-1-56619-909-4", "Title-909-4");
         Book bk2 = new Book("Author-9462-6", "978-1-4028-9462-6", "Title-9462-6");
         Book bk3 = new Book("Richard Castle", "978-3-8642-5007-1", "Heat Wave");
@@ -148,7 +140,7 @@ public class MediaServiceImpl implements IMediaService {
                         books.add(book);
                         
                         // Persistence
-                        persist(book);
+                        //persist(book);
                         return MediaServiceResult.OKAY;
                     }  else  {
                         return MediaServiceResult.ISBNBROKEN;
@@ -178,7 +170,7 @@ public class MediaServiceImpl implements IMediaService {
                         discs.add(disc);
                         
                         // Persistence
-                        persist(disc);
+                        //persist(disc);
                         return MediaServiceResult.OKAY;
                     }  else  {
                         return MediaServiceResult.ISBNBROKEN;
@@ -236,8 +228,8 @@ public class MediaServiceImpl implements IMediaService {
                         result = addBook(newbook);
                         
                         // Persistance
-                        delete(remove);
-                        persist(newbook);
+                        //delete(remove);
+                        //persist(newbook);
                     }
                     
                     return result;
@@ -282,8 +274,8 @@ public class MediaServiceImpl implements IMediaService {
                         result = addDisc(newdisc);
                         
                         // Persistance
-                        delete(remove);
-                        persist(newdisc);
+                        //delete(remove);
+                        //persist(newdisc);
                     }
                     return result;
                 }
@@ -310,32 +302,6 @@ public class MediaServiceImpl implements IMediaService {
             }
         }
         return null;
-    }
-    
-    /**
-     * Persisting given Data.
-     * @param obj Object to persist.
-     */
-    private void persist(Object obj) {
-        entityManager = sessionFactory.getCurrentSession();
-        tx = entityManager.beginTransaction();
-        entityManager.persist(obj);
-        tx.commit();
-        
-        //injector.getInstance(SessionFactory.class).close();
-    }
-    
-    /**
-     * Deleting persisted Data..
-     * @param obj Object to delete.
-     */
-    private void delete(Object obj) {
-        entityManager = sessionFactory.getCurrentSession();
-        tx = entityManager.beginTransaction();
-        entityManager.delete(obj);
-        tx.commit();
-        
-        //injector.getInstance(SessionFactory.class).close();
     }
 
 }

@@ -33,7 +33,7 @@ public class Disc extends Medium {
     /**
      * Default-Constructor for a Disc Object, only for Jackson.
      */
-    private Disc() {
+    Disc() {
         this("0", "John Doe", 0, null);
     }
     

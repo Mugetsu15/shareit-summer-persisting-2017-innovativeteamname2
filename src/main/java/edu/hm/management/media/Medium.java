@@ -39,6 +39,13 @@ public class Medium implements Serializable{
     private final String title;
     
     /**
+     * Default Constructor for Hibernate.
+     */
+    Medium()  {
+        title = null;
+        
+    }
+    /**
      * Constructor for a Medium Object.
      * @param title Title of Medium
      */

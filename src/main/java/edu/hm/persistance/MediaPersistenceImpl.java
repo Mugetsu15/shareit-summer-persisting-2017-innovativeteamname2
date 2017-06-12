@@ -1,11 +1,15 @@
 package edu.hm.persistance;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import com.google.inject.Guice;
 import com.google.inject.Inject;
@@ -31,25 +35,13 @@ public class MediaPersistenceImpl implements IMediaPersistence {
     private Transaction tx;
     
     /**
-     * List to save all Books.
-     */
-    private static List<Book> books = new ArrayList<>();
-    
-    /**
-     * List to save all Discs.
-     */
-    private static List<Disc> discs = new ArrayList<>();
-    
-    /**
-     * Method to clear the Library.
+     * Method to clear the database.
      */
     public void clearLibary()  {
-        books.clear();
-        discs.clear();
     }
     
     /**
-     * Default Constructor, only for Jackson.
+     * Default Constructor.
      */
     public MediaPersistenceImpl()  {
         injector.injectMembers(this);
@@ -68,7 +60,7 @@ public class MediaPersistenceImpl implements IMediaPersistence {
     }
     
     /**
-     * Deleting persisted Data..
+     * Deleting persisted Data.
      * @param obj Object to delete.
      */
     private void delete(Object obj) {
@@ -91,21 +83,26 @@ public class MediaPersistenceImpl implements IMediaPersistence {
     
 
     @Override
-    public Book deleteBook(Book book) {
+    public Medium deleteBook(Book book) {
        delete(book);
        return book;
         
     }
 
     @Override
-    public Disc deleteDisc(Disc disc) {
+    public Medium deleteDisc(Disc disc) {
        delete(disc);
        return disc;
         
     }
     
+    
     @Override
     public Medium[] getBooks() {
+        String queryString = "from TableMedium where isbn is not null";
+        Query<Book> query = entityManager.createQuery(queryString);
+        List<Book> books = query.list();
+        
         Book[] media = new Book[books.size()];
         media = books.toArray(media);
         return media;
@@ -113,21 +110,36 @@ public class MediaPersistenceImpl implements IMediaPersistence {
 
     @Override
     public Medium[] getDiscs() {
+        String queryString = "from TableMedium where barcode is not null";
+        Query<Disc> query = entityManager.createQuery(queryString);
+        List<Disc> discs = query.list();
+        
         Disc[] media = new Disc[discs.size()];
-        media = discs.toArray(media);
         return media;
     }
 
     @Override
     public Medium findBook(String isbn) {
-        // TODO Auto-generated method stub
-        return null;
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Book> query = builder.createQuery(Book.class);
+        Root<Book> root = query.from(Book.class);
+        query.where(builder.equal(root.get("isbn"), isbn));
+        Query<Book> q = entityManager.createQuery(query);
+        Book book = q.getResultList().get(0);
+        
+        return book;
     }
 
     @Override
     public Medium findDisc(String barcode) {
-        // TODO Auto-generated method stub
-        return null;
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Disc> query = builder.createQuery(Disc.class);
+        Root<Disc> root = query.from(Disc.class);
+        query.where(builder.equal(root.get("barcode"), barcode));
+        Query<Disc> q = entityManager.createQuery(query);
+        Disc disc = q.getResultList().get(0);
+        
+        return disc;
     }
 
 }
