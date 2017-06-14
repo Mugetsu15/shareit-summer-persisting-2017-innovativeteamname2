@@ -18,7 +18,6 @@
         <property name="transaction.auto_close_session">true</property>
 
         <mapping class="edu.hm.management.media.Book" />
-		<mapping class="edu.hm.management.media.Copy" />
 		<mapping class="edu.hm.management.media.Disc" />
 		<mapping class="edu.hm.management.media.Medium" />
     </session-factory>

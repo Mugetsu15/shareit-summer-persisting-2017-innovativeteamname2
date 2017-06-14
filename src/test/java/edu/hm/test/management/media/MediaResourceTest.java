@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.inject.Inject;
+
 import edu.hm.management.bib.Fsk;
 import edu.hm.management.bib.IMediaService;
 import edu.hm.management.bib.MediaResource;
@@ -15,6 +17,7 @@ import edu.hm.management.user.AuthenticationResource;
 import edu.hm.management.user.IAuthentication;
 import edu.hm.management.user.Role;
 import edu.hm.management.user.User;
+import edu.hm.persistance.IMediaPersistence;
 import edu.hm.management.user.AuthenticationImpl;
 
 import javax.ws.rs.core.Response;
@@ -26,10 +29,13 @@ import javax.ws.rs.core.Response;
  */
 public class MediaResourceTest {
     
-    private IMediaService service = new MediaServiceImpl();
+    @Inject
+    private IMediaPersistence database;
+    
+    private IMediaService service = new MediaServiceImpl(database);
     private IAuthentication tokenService = new AuthenticationImpl();
     
-    private MediaResource resource = new MediaResource();
+    private MediaResource resource = new MediaResource(service);
     private AuthenticationResource tokenResource = new AuthenticationResource();
     
     private final String token = "rootToken";
@@ -52,8 +58,8 @@ public class MediaResourceTest {
         tokenService = new AuthenticationImpl();
         tokenResource = new AuthenticationResource(tokenService);
         
-        service.clearLibary();
-        service = new MediaServiceImpl();
+        //service.clearLibary();
+        service = new MediaServiceImpl(database);
         resource = new MediaResource(service, tokenService);
     }
     

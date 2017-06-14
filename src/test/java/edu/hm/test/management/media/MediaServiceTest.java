@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Inject;
 
 import edu.hm.management.bib.Fsk;
 import edu.hm.management.bib.IMediaService;
@@ -17,6 +18,7 @@ import edu.hm.management.media.Disc;
 import edu.hm.management.media.Medium;
 import edu.hm.management.user.AuthenticationResource;
 import edu.hm.management.user.IAuthentication;
+import edu.hm.persistance.IMediaPersistence;
 import edu.hm.management.user.AuthenticationImpl;
 
 /**
@@ -26,13 +28,16 @@ import edu.hm.management.user.AuthenticationImpl;
  */
 public class MediaServiceTest {
     
+    @Inject
+    private IMediaPersistence database;
+    
     /**
      * Media Interface.
      */
-    private IMediaService service = new MediaServiceImpl();
+    private IMediaService service = new MediaServiceImpl(database);
     private IAuthentication newToken = new AuthenticationImpl();
     
-    private MediaResource resource = new MediaResource();
+    private MediaResource resource = new MediaResource(service);
     private AuthenticationResource tokenResource = new AuthenticationResource();
     
     private Book bk1 = new Book("Richard Castle", "978-3864250101", "Frozen Heat");
@@ -50,8 +55,8 @@ public class MediaServiceTest {
         newToken = new AuthenticationImpl();
         tokenResource = new AuthenticationResource(newToken);
         
-        service.clearLibary();
-        service = new MediaServiceImpl();
+        //service.clearLibary();
+        service = new MediaServiceImpl(database);
         resource = new MediaResource(service, newToken);
     }
     

@@ -1,20 +1,15 @@
 package edu.hm.management.bib;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import javax.inject.Inject;
 
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-
-import edu.hm.GuiceModule;
 import edu.hm.management.media.Book;
 import edu.hm.management.media.Disc;
 import edu.hm.management.media.Medium;
+import edu.hm.persistance.IMediaPersistence;
 
 /**
  * Implementation for Media Service Interface.
@@ -23,44 +18,34 @@ import edu.hm.management.media.Medium;
  */
 public class MediaServiceImpl implements IMediaService {
     
+    /**
+     * Interface of Persistence.
+     */
+    private IMediaPersistence database;
+    
     
     /**
-     * List to save all Books.
+     * Default Constructor.
      */
-    private static List<Book> books = new ArrayList<>();
-    
-    /**
-     * List to save all Discs.
-     */
-    private static List<Disc> discs = new ArrayList<>();
-    
-    /**
-     * Method to clear the Library.
-     */
-    public void clearLibary()  {
-        books.clear();
-        discs.clear();
-    }
-    
-    /**
-     * Default Constructor, only for Jackson.
-     */
-    public MediaServiceImpl()  {
-        Book bk1 = new Book("Author-909-4", "978-1-56619-909-4", "Title-909-4");
-        Book bk2 = new Book("Author-9462-6", "978-1-4028-9462-6", "Title-9462-6");
-        Book bk3 = new Book("Richard Castle", "978-3-8642-5007-1", "Heat Wave");
+    @Inject
+    public MediaServiceImpl(IMediaPersistence persistenceInterface)  {
+        database = persistenceInterface;
         
-        Disc ds1 = new Disc("978-1-56619-909-4", "Director-909-4", Fsk.FSK12.getFsk(), "Title-909-4");
-        Disc ds2 = new Disc("978-1-4028-9462-6", "Director-9462-6", Fsk.FSK18.getFsk(), "Title-9462-6");
-        Disc ds3 = new Disc("8-88837-34272-8", "James Arthur", Fsk.FSK0.getFsk(), "Impossible");
-        
-        addBook(bk1);
-        addBook(bk2);
-        addBook(bk3);
-        
-        addDisc(ds1);
-        addDisc(ds2);
-        addDisc(ds3);
+//        Book bk1 = new Book("Author-909-4", "978-1-56619-909-4", "Title-909-4");
+//        Book bk2 = new Book("Author-9462-6", "978-1-4028-9462-6", "Title-9462-6");
+//        Book bk3 = new Book("Richard Castle", "978-3-8642-5007-1", "Heat Wave");
+//        
+//        Disc ds1 = new Disc("978-1-56619-909-4", "Director-909-4", Fsk.FSK12.getFsk(), "Title-909-4");
+//        Disc ds2 = new Disc("978-1-4028-9462-6", "Director-9462-6", Fsk.FSK18.getFsk(), "Title-9462-6");
+//        Disc ds3 = new Disc("8-88837-34272-8", "James Arthur", Fsk.FSK0.getFsk(), "Impossible");
+//        
+//        addBook(bk1);
+//        addBook(bk2);
+//        addBook(bk3);
+//        
+//        addDisc(ds1);
+//        addDisc(ds2);
+//        addDisc(ds3);
     }
     
     /**
@@ -127,6 +112,7 @@ public class MediaServiceImpl implements IMediaService {
     @Override
     public MediaServiceResult addBook(Book book) {
         if (!book.getAuthor().isEmpty() && !book.getIsbn().isEmpty() && !book.getTitle().isEmpty()) {
+            List<Book> books = new ArrayList<>(Arrays.asList(database.getBooks()));
             if (!books.contains(book))  {
                 boolean isbnExist = false;
                 for (Book bk : books)  {
@@ -137,10 +123,8 @@ public class MediaServiceImpl implements IMediaService {
                 }
                 if (!isbnExist)  {
                     if (checkISBN13(book.getIsbn()))  {
-                        books.add(book);
-                        
-                        // Persistence
-                        //persist(book);
+                        book = new Book(book.getAuthor(), cleanISBN(book.getIsbn()), book.getTitle());
+                        database.persistBook(book);
                         return MediaServiceResult.OKAY;
                     }  else  {
                         return MediaServiceResult.ISBNBROKEN;
@@ -157,6 +141,7 @@ public class MediaServiceImpl implements IMediaService {
     @Override
     public MediaServiceResult addDisc(Disc disc) {
         if (!disc.getDirector().isEmpty() && !disc.getBarcode().isEmpty() && !disc.getTitle().isEmpty()) {
+            List<Disc> discs = new ArrayList<>(Arrays.asList(database.getDiscs()));
             if (!discs.contains(disc))  {
                 boolean barcodeExists = false;
                 for (Disc ds : discs)  {
@@ -167,10 +152,8 @@ public class MediaServiceImpl implements IMediaService {
                 }
                 if (!barcodeExists)  {
                     if (checkISBN13(disc.getBarcode()))  {
-                        discs.add(disc);
-                        
-                        // Persistence
-                        //persist(disc);
+                        disc = new Disc(disc.getDirector(), cleanISBN(disc.getBarcode()), disc.getFsk(), disc.getTitle());
+                        database.persistDisc(disc);
                         return MediaServiceResult.OKAY;
                     }  else  {
                         return MediaServiceResult.ISBNBROKEN;
@@ -186,21 +169,18 @@ public class MediaServiceImpl implements IMediaService {
 
     @Override
     public Medium[] getBooks() {
-        Book[] media = new Book[books.size()];
-        media = books.toArray(media);
-        return media;
+        return database.getBooks();
     }
 
     @Override
     public Medium[] getDiscs() {
-        Disc[] media = new Disc[discs.size()];
-        media = discs.toArray(media);
-        return media;
+        return database.getDiscs();
     }
 
     @Override
     public MediaServiceResult updateBook(Book book)  {
         boolean isbnInList = false;
+        List<Book> books = new ArrayList<>(Arrays.asList(database.getBooks()));
         for (Book bk : books)  {
             if (cleanISBN(bk.getIsbn()).equals(cleanISBN(book.getIsbn())))  {
                 isbnInList = true;
@@ -224,12 +204,9 @@ public class MediaServiceImpl implements IMediaService {
                     
                     if (!title.equals(bk.getTitle()) || !author.equals(bk.getAuthor()))  {  // Data was modified
                         Book remove = books.remove(c);
+                        database.deleteBook(remove);
                         Book newbook = new Book(author, book.getIsbn(), title);
                         result = addBook(newbook);
-                        
-                        // Persistance
-                        //delete(remove);
-                        //persist(newbook);
                     }
                     
                     return result;
@@ -243,6 +220,7 @@ public class MediaServiceImpl implements IMediaService {
     //CHECKSTYLE:ON
     public MediaServiceResult updateDisc(Disc disc) {
         boolean barcodeInList = false;
+        List<Disc> discs = new ArrayList<>(Arrays.asList(database.getDiscs()));
         for (Disc ds : discs)  {
             if (cleanISBN(ds.getBarcode()).equals(cleanISBN(disc.getBarcode())))  {
                 barcodeInList = true;
@@ -270,12 +248,9 @@ public class MediaServiceImpl implements IMediaService {
                     
                     if (!director.equals(ds.getDirector()) || fsk != ds.getFsk() || !title.equals(ds.getTitle()))  {  // Data was modified
                         Disc remove = discs.remove(c);
+                        database.deleteDisc(remove);
                         Disc newdisc = new Disc(disc.getBarcode(), director, fsk, title);
                         result = addDisc(newdisc);
-                        
-                        // Persistance
-                        //delete(remove);
-                        //persist(newdisc);
                     }
                     return result;
                 }
@@ -286,22 +261,12 @@ public class MediaServiceImpl implements IMediaService {
 
     @Override
     public Medium findBook(String isbn) {
-        for (Book bk : books)  {
-            if (cleanISBN(bk.getIsbn()).equals(cleanISBN(isbn)))  {
-                return bk;
-            }
-        }
-        return null;
+        return database.findBook(isbn);
     }
 
     @Override
     public Medium findDisc(String barcode) {
-        for (Disc ds : discs)  {
-            if (cleanISBN(ds.getBarcode()).equals(cleanISBN(barcode)))  {
-                return ds;
-            }
-        }
-        return null;
+        return database.findDisc(barcode);
     }
 
 }

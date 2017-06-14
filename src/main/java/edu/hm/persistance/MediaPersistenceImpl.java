@@ -11,11 +11,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-
-import edu.hm.GuiceModule;
+import javax.inject.Inject;
 import edu.hm.management.media.Book;
 import edu.hm.management.media.Disc;
 import edu.hm.management.media.Medium;
@@ -27,12 +23,8 @@ import edu.hm.management.media.Medium;
  */
 public class MediaPersistenceImpl implements IMediaPersistence {
     
-    private static final Injector injector = Guice.createInjector(new GuiceModule());
-    
     @Inject
     private SessionFactory sessionFactory;
-    private Session entityManager;
-    private Transaction tx;
     
     /**
      * Method to clear the database.
@@ -44,8 +36,6 @@ public class MediaPersistenceImpl implements IMediaPersistence {
      * Default Constructor.
      */
     public MediaPersistenceImpl()  {
-        injector.injectMembers(this);
-        
     }
 
     /**
@@ -53,8 +43,8 @@ public class MediaPersistenceImpl implements IMediaPersistence {
      * @param obj Object to persist.
      */
     private void persist(Object obj) {
-        entityManager = sessionFactory.getCurrentSession();
-        tx = entityManager.beginTransaction();
+        Session entityManager = sessionFactory.getCurrentSession();
+        Transaction tx = entityManager.beginTransaction();
         entityManager.persist(obj);
         tx.commit();
     }
@@ -64,8 +54,8 @@ public class MediaPersistenceImpl implements IMediaPersistence {
      * @param obj Object to delete.
      */
     private void delete(Object obj) {
-        entityManager = sessionFactory.getCurrentSession();
-        tx = entityManager.beginTransaction();
+        Session entityManager = sessionFactory.getCurrentSession();
+        Transaction tx = entityManager.beginTransaction();
         entityManager.delete(obj);
         tx.commit();
     }
@@ -98,9 +88,16 @@ public class MediaPersistenceImpl implements IMediaPersistence {
     
     
     @Override
-    public Medium[] getBooks() {
-        String queryString = "from TableMedium where isbn is not null";
+    public Book[] getBooks() {
+        Session entityManager = sessionFactory.getCurrentSession();
+        Transaction tx = entityManager.beginTransaction();
+        
+        String tablename = Medium.getTableName(); // TableMedium
+        
+        String queryString = String.format("from %s", tablename);
+        System.out.println(String.format("Query: '%s'", queryString));
         Query<Book> query = entityManager.createQuery(queryString);
+        tx.commit();
         List<Book> books = query.list();
         
         Book[] media = new Book[books.size()];
@@ -109,8 +106,12 @@ public class MediaPersistenceImpl implements IMediaPersistence {
     }
 
     @Override
-    public Medium[] getDiscs() {
-        String queryString = "from TableMedium where barcode is not null";
+    public Disc[] getDiscs() {
+        Session entityManager = sessionFactory.getCurrentSession();
+        
+        String tablename = Medium.getTableName();
+        
+        String queryString = String.format("from %s", tablename);
         Query<Disc> query = entityManager.createQuery(queryString);
         List<Disc> discs = query.list();
         
@@ -120,6 +121,8 @@ public class MediaPersistenceImpl implements IMediaPersistence {
 
     @Override
     public Medium findBook(String isbn) {
+        Session entityManager = sessionFactory.getCurrentSession();
+    
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Book> query = builder.createQuery(Book.class);
         Root<Book> root = query.from(Book.class);
@@ -132,6 +135,8 @@ public class MediaPersistenceImpl implements IMediaPersistence {
 
     @Override
     public Medium findDisc(String barcode) {
+        Session entityManager = sessionFactory.getCurrentSession();
+        
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Disc> query = builder.createQuery(Disc.class);
         Root<Disc> root = query.from(Disc.class);
@@ -141,5 +146,4 @@ public class MediaPersistenceImpl implements IMediaPersistence {
         
         return disc;
     }
-
 }

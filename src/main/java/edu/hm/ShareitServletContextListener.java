@@ -10,6 +10,8 @@ import com.google.inject.servlet.ServletModule;
 
 import edu.hm.management.bib.IMediaService;
 import edu.hm.management.bib.MediaServiceImpl;
+import edu.hm.persistance.IMediaPersistence;
+import edu.hm.persistance.MediaPersistenceImpl;
 
 /**
 * Context Listener to enable usage of google guice together with jersey.
@@ -20,6 +22,7 @@ public class ShareitServletContextListener extends GuiceServletContextListener {
         @Override
         protected void configureServlets() {
             bind(IMediaService.class).to(MediaServiceImpl.class);
+            bind(IMediaPersistence.class).to(MediaPersistenceImpl.class);
             bind(SessionFactory.class).toInstance(new Configuration().configure().buildSessionFactory());
         }
     });

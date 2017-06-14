@@ -12,11 +12,6 @@ import edu.hm.management.media.Medium;
 public interface IMediaService {
     
     /**
-     * Method to clear the Library.
-     */
-    void clearLibary();
-    
-    /**
      * Adds a given book to our Service Routine.
      * @param book Book to add.
      * @return Media Service Result (Enum)

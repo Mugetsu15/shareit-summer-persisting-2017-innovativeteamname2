@@ -44,13 +44,13 @@ public interface IMediaPersistence {
      * Returns all Books of our database.
      * @return all Books of our database
      */
-    Medium[] getBooks();
+    Book[] getBooks();
     
     /**
      * Returns all Discs of our database.
      * @return all Discs of our database
      */
-    Medium[] getDiscs();
+    Disc[] getDiscs();
     
     /**
      * Returns a Book of database.

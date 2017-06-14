@@ -8,17 +8,34 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.Table;
 
 /**
  * Class represents a Medium Object which has a title.
  * @author Daniel Gabl
  *
  */
+
 @Entity
-@Table(name="TableMedium")
-@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-public class Medium implements Serializable{
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+public class Medium implements Serializable  {
+    
+    private final static String dbTableName = "Medium";
+    private final static String primaryBookID = "isbn";
+    private final static String primaryDiscID = "barcode";
+    
+    public static String getTableName()  {
+        return dbTableName;
+    }
+    
+    public static String getPrimaryBookID()  {
+        return primaryBookID;
+    }
+    
+    public static String getPrimaryDiscID()  {
+        return primaryDiscID;
+    }
+    
+    
     
     /**
      * UID.

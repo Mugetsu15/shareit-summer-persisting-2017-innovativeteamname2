@@ -13,7 +13,7 @@ import javax.persistence.Id;
  * @author Daniel Gabl
  *
  */
-@Entity
+//@Entity
 public class Copy implements Serializable  {
     
     /**
@@ -24,9 +24,9 @@ public class Copy implements Serializable  {
     /**
      * ID of Copy for Persistence.
      */
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column(name="COPY_ID")
+    //@Id
+    //@GeneratedValue(strategy=GenerationType.AUTO)
+    //@Column(name="COPY_ID")
     private long copyID;
     
     /**
