@@ -16,23 +16,46 @@ import javax.persistence.InheritanceType;
  */
 
 @Entity
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Medium implements Serializable  {
     
-    private final static String dbTableName = "Medium";
-    private final static String primaryBookID = "isbn";
-    private final static String primaryDiscID = "barcode";
+    /**
+     * Name of DataBase table.
+     */
+    private static final String DBTABLENAME = "Medium";
     
+    /**
+     * Name of primary ID of Book class.
+     */
+    private static final String PRIMARYBOOKID = "isbn";
+    
+    /**
+     * Name pf primary ID of Disc class.
+     */
+    private static final String PRIMARYDISCID = "barcode";
+    
+    /**
+     * Getter for the name of the database table.
+     * @return name of the database table
+     */
     public static String getTableName()  {
-        return dbTableName;
+        return DBTABLENAME;
     }
     
+    /**
+     * Getter for the name of the primary id of the Book Class.
+     * @return name of the primary id of the Book Class.
+     */
     public static String getPrimaryBookID()  {
-        return primaryBookID;
+        return PRIMARYBOOKID;
     }
     
+    /**
+     * Getter for the name of the primary id of the Disc Class.
+     * @return name of the primary id of the Disc Class.
+     */
     public static String getPrimaryDiscID()  {
-        return primaryDiscID;
+        return PRIMARYDISCID;
     }
     
     

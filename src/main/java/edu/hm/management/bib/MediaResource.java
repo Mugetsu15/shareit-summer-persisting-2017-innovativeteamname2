@@ -40,6 +40,7 @@ public class MediaResource {
     
     /**
      * Default Constructor. Creating a new media service.
+     * @param mediaService Injected MediaService-Interface
      */
     
     @Inject
@@ -53,11 +54,11 @@ public class MediaResource {
      * @param service Service to set for this service
      * @param tokenService Service to validate Tokens
      */
-//    public MediaResource(IMediaService service, IAuthentication tokenService) {
-//        this.service = service;
-//        this.tokenService = tokenService;
-//    }
-//    
+    public MediaResource(IMediaService service, IAuthentication tokenService) {
+        this.service = service;
+        this.tokenService = tokenService;
+    }
+    
     /**
      * Validates a given Token. Validation happens in Authorization Sub Routine.
      * @param token Token to check on
@@ -80,11 +81,9 @@ public class MediaResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createBook(Book book, @QueryParam("token") String token, @Context HttpServletRequest request)  {
-        System.out.println("Hier bei CreateBook");
         MediaServiceResult result = tokenValid(token, request);
         
         if (result.equals(MediaServiceResult.OKAY)) {
-            System.out.println("Token pass, auf in addBook von MediaServiceImpl");
             result = service.addBook(book);
         }
         

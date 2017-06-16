@@ -18,7 +18,7 @@ import edu.hm.persistance.MediaPersistenceImpl;
 */
 public class ShareitServletContextListener extends GuiceServletContextListener {
     
-    private static final Injector injector = Guice.createInjector(new ServletModule() {
+    private static final Injector INJECTOR = Guice.createInjector(new ServletModule() {
         @Override
         protected void configureServlets() {
             bind(IMediaService.class).to(MediaServiceImpl.class);
@@ -29,13 +29,13 @@ public class ShareitServletContextListener extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        return injector;
+        return INJECTOR;
     }
     /**
      * This method is only required for the HK2-Guice-Bridge in the Application class.
      * @return Injector instance.
      */
     static Injector getInjectorInstance() {
-        return injector;
+        return INJECTOR;
     }
 }

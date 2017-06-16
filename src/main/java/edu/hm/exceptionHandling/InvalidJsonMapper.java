@@ -7,12 +7,16 @@ import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 
+/**
+ * Exception-Handler for wrong JSON inputs.
+ * @author Daniel Gabl
+ *
+ */
 @Provider
-public class InvalidJsonMapper implements ExceptionMapper<PropertyBindingException >{
+public class InvalidJsonMapper implements ExceptionMapper<PropertyBindingException > {
 
     @Override
-    public Response toResponse(PropertyBindingException exception)
-    {
+    public Response toResponse(PropertyBindingException exception) {
         return Response
                 .status(Response.Status.BAD_REQUEST)
                 .entity("This is an invalid request. At least one field format is not readable by the system.")

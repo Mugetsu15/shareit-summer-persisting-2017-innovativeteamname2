@@ -1,7 +1,6 @@
 package edu.hm.management.media;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 
 /**
  * Class represents a Disc Object which has a barcode, a director and a fsk.

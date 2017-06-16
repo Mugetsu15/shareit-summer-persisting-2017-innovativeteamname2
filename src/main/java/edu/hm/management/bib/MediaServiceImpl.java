@@ -23,13 +23,24 @@ public class MediaServiceImpl implements IMediaService {
      */
     private IMediaPersistence database;
     
+    /**
+     * Boolean to check if database was initialized.
+     */
+    private static boolean initialized = false;
+    
     
     /**
      * Default Constructor.
+     * @param persistenceInterface Injected MediaPersistence-Interface
      */
     @Inject
     public MediaServiceImpl(IMediaPersistence persistenceInterface)  {
         database = persistenceInterface;
+        
+        if (!initialized)  {
+            database.initialize();
+            initialized = true;
+        }
         
 //        Book bk1 = new Book("Author-909-4", "978-1-56619-909-4", "Title-909-4");
 //        Book bk2 = new Book("Author-9462-6", "978-1-4028-9462-6", "Title-9462-6");
@@ -46,6 +57,8 @@ public class MediaServiceImpl implements IMediaService {
 //        addDisc(ds1);
 //        addDisc(ds2);
 //        addDisc(ds3);
+        
+        
     }
     
     /**
@@ -60,8 +73,7 @@ public class MediaServiceImpl implements IMediaService {
         
         boolean flag = false;
         
-        isbn = isbn.replace("-", "");
-        isbn = isbn.replace(" ", "");
+        cleanISBN(isbn);
         
         int sum = 0;
         try  {
@@ -261,11 +273,13 @@ public class MediaServiceImpl implements IMediaService {
 
     @Override
     public Medium findBook(String isbn) {
+        isbn = cleanISBN(isbn);
         return database.findBook(isbn);
     }
 
     @Override
     public Medium findDisc(String barcode) {
+        barcode = cleanISBN(barcode);
         return database.findDisc(barcode);
     }
 

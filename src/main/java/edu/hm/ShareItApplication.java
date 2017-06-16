@@ -11,7 +11,11 @@ import org.jvnet.hk2.guice.bridge.api.GuiceIntoHK2Bridge;
 * Application class to enable guice within jersey.
 */
 public class ShareItApplication extends ResourceConfig {
-
+    
+    /**
+     * Guice Bridge.
+     * @param serviceLocator Service Locator
+     */
     @Inject
     public ShareItApplication(ServiceLocator serviceLocator) {
         GuiceBridge.getGuiceBridge().initializeGuiceBridge(serviceLocator);

@@ -2,12 +2,6 @@ package edu.hm.management.media;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
 /**
  * Class represents a Copy of a Medium which has a Medium Object and an owner.
  * @author Daniel Gabl

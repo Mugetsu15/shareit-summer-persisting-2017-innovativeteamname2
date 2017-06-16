@@ -1,7 +1,6 @@
 package edu.hm.management.media;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 
 /**
  * Class represents a Book Object which has an author and an isbn.

@@ -17,6 +17,11 @@ public interface IMediaPersistence {
     void clearLibary();
     
     /**
+     * Method to initialize old data from the database.
+     */
+    void initialize();
+    
+    /**
      * Persists a given book.
      * @param book Book to persist
      */
@@ -31,12 +36,14 @@ public interface IMediaPersistence {
     /**
      * Deletes a given book from the database.
      * @param book Book to persist
+     * @return Deleted Book
      */
     Medium deleteBook(Book book);
     
     /**
      * Deletes a given disc from the database.
      * @param disc Disc to persist
+     * @return Deleted Disc
      */
     Medium deleteDisc(Disc disc);
     

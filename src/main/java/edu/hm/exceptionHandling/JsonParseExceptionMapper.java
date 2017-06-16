@@ -7,12 +7,16 @@ import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.core.JsonParseException;
 
+/**
+ * Exception-Handler for wrong JSON inputs.
+ * @author Daniel Gabl
+ *
+ */
 @Provider
-public class JsonParseExceptionMapper implements ExceptionMapper<JsonParseException>{
+public class JsonParseExceptionMapper implements ExceptionMapper<JsonParseException> {
 
     @Override
-    public Response toResponse(JsonParseException exception)
-    {
+    public Response toResponse(JsonParseException exception) {
         return Response
                 .status(Response.Status.BAD_REQUEST)
                 .entity("This is an invalid json. The request can not be parsed")
