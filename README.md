@@ -1,8 +1,11 @@
-# 4. Pratkikumsaufgabe Software-Architektur Sommer 2017
+# 5. Pratkikumsaufgabe Software-Architektur Sommer 2017
 
 Developer: Gabl, Daniel<br />
-Deployment: [Heroku](https://innovative-teamname-auth.herokuapp.com/)<br />
-Project Status: 100%<br />
+Deployment: [Heroku](https://innovative-teamname-persist.herokuapp.com/)<br />
+Project Status: 95%<br />
+ToDo:<br />
+\- Tests are not allowed to fail because of NullPointerExceptions (missing Injection)<br />
+\- Deploy on Heroku (fails because of the tests)
 
 
 URI-Template|Verb|Wirkung
