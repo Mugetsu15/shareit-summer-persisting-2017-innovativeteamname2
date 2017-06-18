@@ -1,12 +1,13 @@
 package edu.hm.test.management.media;
 
+import javax.inject.Inject;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Inject;
 
 import edu.hm.management.bib.Fsk;
 import edu.hm.management.bib.IMediaService;
@@ -28,12 +29,12 @@ import edu.hm.management.user.AuthenticationImpl;
  */
 public class MediaServiceTest {
     
-    @Inject
     private IMediaPersistence database;
-    
+
     /**
      * Media Interface.
-     */
+     */    
+    @Inject
     private IMediaService service = new MediaServiceImpl(database);
     private IAuthentication newToken = new AuthenticationImpl();
     

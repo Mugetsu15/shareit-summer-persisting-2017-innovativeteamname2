@@ -6,6 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import edu.hm.test.management.media.MediaResourceTest;
 import edu.hm.test.management.media.MediaServiceTest;
+import edu.hm.test.management.persistence.MediaPersistenceTest;
 import edu.hm.test.management.user.AuthenticationResourceTest;
 import edu.hm.test.management.user.AuthenticationServiceTest;
 import edu.hm.test.management.user.UserTest;
@@ -16,7 +17,7 @@ import edu.hm.test.management.user.UserTest;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({ MediaServiceTest.class, MediaResourceTest.class, AuthenticationResourceTest.class, AuthenticationServiceTest.class, UserTest.class})
+@SuiteClasses({ MediaServiceTest.class, MediaResourceTest.class, AuthenticationResourceTest.class, AuthenticationServiceTest.class, UserTest.class, MediaPersistenceTest.class})
 public class ShareItTest {
 
 }
