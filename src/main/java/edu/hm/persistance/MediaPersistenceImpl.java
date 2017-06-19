@@ -40,66 +40,66 @@ public class MediaPersistenceImpl implements IMediaPersistence {
     
     
     /**
-     * Method to initialize data from the database.
+     * Method to initialize data from the database. Should be happening automatically.
      */
-    public void initialize()  {
-        // Session entityManager = sessionFactory.getCurrentSession();
-        
-        // Get all books and discs
-        Book[] books = getBooks();
-        Disc[] discs = getDiscs();
-        
-        //Transaction tx = entityManager.beginTransaction();
-        
-        int minSize = 0;
-        boolean moreBooks;
-        boolean equalObjects;
-        
-        // determine if there are more books or discs
-        if (books.length > discs.length)  {
-            minSize = discs.length;
-            moreBooks = true;
-            equalObjects = false;
-        }  else  if (discs.length > books.length)  {
-            minSize = books.length;
-            moreBooks = false;
-            equalObjects = false;
-        }  else  {
-            minSize = books.length;
-            moreBooks = false;
-            equalObjects = true;
-        }
-        
-        System.out.println("Min Size: " + minSize);
-        
-        // persist books and discs
-        for (int c = 0; c < minSize; c++)  {
-            Book book = books[c];
-            Disc disc = discs[c];
-            
-            System.out.println(book);
-            System.out.println(disc);
-            
-            persist(book);
-            persist(disc);
-        }
-        
-        if (!equalObjects)  {
-            if (moreBooks)  {
-                for (int c = minSize; c < books.length; c++)  {
-                    Book book = books[c];
-                    persist(book);
-                }
-            }  else  {
-                for (int c = minSize; c < discs.length; c++)  {
-                    Disc disc = discs[c];
-                    persist(disc);
-                }
-            }
-        }
-        
-        //tx.commit();
-    }
+//    private void initialize()  {
+//        // Session entityManager = sessionFactory.getCurrentSession();
+//        
+//        // Get all books and discs
+//        Book[] books = getBooks();
+//        Disc[] discs = getDiscs();
+//        
+//        //Transaction tx = entityManager.beginTransaction();
+//        
+//        int minSize = 0;
+//        boolean moreBooks;
+//        boolean equalObjects;
+//        
+//        // determine if there are more books or discs
+//        if (books.length > discs.length)  {
+//            minSize = discs.length;
+//            moreBooks = true;
+//            equalObjects = false;
+//        }  else  if (discs.length > books.length)  {
+//            minSize = books.length;
+//            moreBooks = false;
+//            equalObjects = false;
+//        }  else  {
+//            minSize = books.length;
+//            moreBooks = false;
+//            equalObjects = true;
+//        }
+//        
+//        System.out.println("Min Size: " + minSize);
+//        
+//        // persist books and discs
+//        for (int c = 0; c < minSize; c++)  {
+//            Book book = books[c];
+//            Disc disc = discs[c];
+//            
+//            System.out.println(book);
+//            System.out.println(disc);
+//            
+//            persist(book);
+//            persist(disc);
+//        }
+//        
+//        if (!equalObjects)  {
+//            if (moreBooks)  {
+//                for (int c = minSize; c < books.length; c++)  {
+//                    Book book = books[c];
+//                    persist(book);
+//                }
+//            }  else  {
+//                for (int c = minSize; c < discs.length; c++)  {
+//                    Disc disc = discs[c];
+//                    persist(disc);
+//                }
+//            }
+//        }
+//        
+//        //tx.commit();
+//    }
     
     
     /**

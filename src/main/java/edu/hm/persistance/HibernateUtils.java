@@ -12,6 +12,7 @@ import org.hibernate.cfg.Configuration;
 // CHECKSTYLE:OFF // Konstruktoren von Hilfsklassen sollten nicht public oder default deklariert sein.
 public class HibernateUtils {
  // CHECKSTYLE:ON
+    
     private static SessionFactory sessionFactory;
 
     static {
@@ -27,9 +28,10 @@ public class HibernateUtils {
     }
     
     /**
-     * Shutdown method for the Hibernate Database.
+     * Shutdown method for the Hibernate Database. This method must be called in order to persist the data to the disc.
      */
     public static void shutdown() {
+        System.out.println("Closing Session Factory..");
         getSessionFactory().close();
     }
 }

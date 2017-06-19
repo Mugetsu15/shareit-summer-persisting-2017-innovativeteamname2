@@ -17,11 +17,6 @@ public interface IMediaPersistence {
     void clearLibary();
     
     /**
-     * Method to initialize old data from the database.
-     */
-    void initialize();
-    
-    /**
      * Persists a given book.
      * @param book Book to persist
      */

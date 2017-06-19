@@ -3,7 +3,7 @@
 Developer: Gabl, Daniel<br />
 Deployment: [Heroku](https://innovative-teamname-persist.herokuapp.com/)<br />
 Project Status: 99%<br />
-ToDo: - Database should not be cleared after shutdown
+ToDo: Database should not be cleared after shutdown
 
 URI-Template|Verb|Wirkung
  -|-|-

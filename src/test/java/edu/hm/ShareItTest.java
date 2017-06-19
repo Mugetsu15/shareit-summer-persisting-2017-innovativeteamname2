@@ -17,7 +17,8 @@ import edu.hm.management.user.UserTest;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({ MediaServiceTest.class, MediaResourceTest.class, AuthenticationResourceTest.class, AuthenticationServiceTest.class, UserTest.class, MediaPersistenceTest.class})
+@SuiteClasses({ MediaServiceTest.class, MediaResourceTest.class, AuthenticationResourceTest.class,
+    AuthenticationServiceTest.class, UserTest.class, MediaPersistenceTest.class})
 public class ShareItTest {
 
 }
