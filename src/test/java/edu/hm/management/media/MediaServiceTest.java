@@ -1,4 +1,4 @@
-package edu.hm.test.management.media;
+package edu.hm.management.media;
 
 import javax.inject.Inject;
 
@@ -8,11 +8,12 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Guice;
 
+import edu.hm.GuiceTestModule;
 import edu.hm.management.bib.Fsk;
 import edu.hm.management.bib.IMediaService;
 import edu.hm.management.bib.MediaResource;
-import edu.hm.management.bib.MediaServiceImpl;
 import edu.hm.management.bib.MediaServiceResult;
 import edu.hm.management.media.Book;
 import edu.hm.management.media.Disc;
@@ -29,23 +30,25 @@ import edu.hm.management.user.AuthenticationImpl;
  */
 public class MediaServiceTest {
     
-    private IMediaPersistence database;
 
     /**
      * Media Interface.
      */    
     @Inject
-    private IMediaService service = new MediaServiceImpl(database);
+    private IMediaService service;// = new MediaServiceImpl(database);
+    @Inject
+    private IMediaPersistence database;
+    
     private IAuthentication newToken = new AuthenticationImpl();
     
     private MediaResource resource = new MediaResource(service);
     private AuthenticationResource tokenResource = new AuthenticationResource();
     
-    private Book bk1 = new Book("Richard Castle", "978-3864250101", "Frozen Heat");
-    private Book bk2 = new Book("Rick Castle", "978-3864252969", "Deadly Heat");
+    private final Book bk1 = new Book("Richard Castle", "978-3864250101", "Frozen Heat");
+    private final Book bk2 = new Book("Rick Castle", "978-3864252969", "Deadly Heat");
 
-    private Disc ds1 = new Disc("978-3864250101", "Director-Frozen", Fsk.FSK16.getFsk(), "Title-Frozen");
-    private Disc ds2 = new Disc("978-3864252969", "Director-Deadly", Fsk.FSK12.getFsk(), "Title-Deadly");
+    private final Disc ds1 = new Disc("978-3864250101", "Director-Frozen", Fsk.FSK16.getFsk(), "Title-Frozen");
+    private final Disc ds2 = new Disc("978-3864252969", "Director-Deadly", Fsk.FSK12.getFsk(), "Title-Deadly");
     
     /**
      * Deleting the List each time. Simulating Jackson Behavior.
@@ -53,11 +56,10 @@ public class MediaServiceTest {
      */
     @Before
     public void setUp() throws Exception {
+        Guice.createInjector(new GuiceTestModule()).injectMembers(this);
         newToken = new AuthenticationImpl();
         tokenResource = new AuthenticationResource(newToken);
         
-        //service.clearLibary();
-        service = new MediaServiceImpl(database);
         resource = new MediaResource(service, newToken);
     }
     
@@ -157,11 +159,12 @@ public class MediaServiceTest {
      */
     @Test
     public void testGetBooks() {
+        service.addBook(bk1);
+        service.addBook(bk2);
         Medium[] books = service.getBooks();
         String booksJSON = objToJSON(books);
-        String expected = "[{\"title\":\"Title-909-4\",\"author\":\"Author-909-4\",\"isbn\":\"978-1-56619-909-4\"},"
-                + "{\"title\":\"Title-9462-6\",\"author\":\"Author-9462-6\",\"isbn\":\"978-1-4028-9462-6\"},"
-                + "{\"title\":\"Heat Wave\",\"author\":\"Richard Castle\",\"isbn\":\"978-3-8642-5007-1\"}]";
+        String expected = "[{\"title\":\"Frozen Heat\",\"author\":\"Richard Castle\",\"isbn\":\"9783864250101\"},"
+                + "{\"title\":\"Deadly Heat\",\"author\":\"Rick Castle\",\"isbn\":\"9783864252969\"}]";
         Assert.assertEquals(expected, booksJSON);
     }
     
@@ -170,10 +173,12 @@ public class MediaServiceTest {
      */
     @Test
     public void testGetDiscs() {
+        service.addDisc(ds1);
+        service.addDisc(ds2);
         Medium[] discs = service.getDiscs();
         String discsJSON = objToJSON(discs);
-        String expected = "[{\"title\":\"Title-909-4\",\"barcode\":\"978-1-56619-909-4\",\"director\":\"Director-909-4\",\"fsk\":12},"
-                + "{\"title\":\"Title-9462-6\",\"barcode\":\"978-1-4028-9462-6\",\"director\":\"Director-9462-6\",\"fsk\":18}]";
+        String expected = "[{\"title\":\"Title-Frozen\",\"barcode\":\"9783864250101\",\"director\":\"Director-Frozen\",\"fsk\":16},"
+                + "{\"title\":\"Title-Deadly\",\"barcode\":\"9783864252969\",\"director\":\"Director-Deadly\",\"fsk\":12}]";
         Assert.assertEquals(expected, discsJSON);
     }
     
@@ -297,7 +302,7 @@ public class MediaServiceTest {
         // correct ISBN
         Medium correct = service.findBook(bk1.getIsbn());
         bookJSON = objToJSON(correct);
-        expected = "{\"title\":\"Frozen Heat\",\"author\":\"Richard Castle\",\"isbn\":\"978-3864250101\"}";
+        expected = "{\"title\":\"Frozen Heat\",\"author\":\"Richard Castle\",\"isbn\":\"9783864250101\"}";
         Assert.assertEquals(expected, bookJSON);
     }
     
@@ -318,7 +323,7 @@ public class MediaServiceTest {
         // correct barcode
         Medium correct = service.findDisc(ds1.getBarcode());
         discJSON = objToJSON(correct);
-        expected = "{\"title\":\"Title-Frozen\",\"barcode\":\"978-3864250101\",\"director\":\"Director-Frozen\",\"fsk\":16}";
+        expected = "{\"title\":\"Title-Frozen\",\"barcode\":\"9783864250101\",\"director\":\"Director-Frozen\",\"fsk\":16}";
         Assert.assertEquals(expected, discJSON);
     }
     

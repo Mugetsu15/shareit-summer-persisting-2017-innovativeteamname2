@@ -1,4 +1,4 @@
-package edu.hm.test.management.user;
+package edu.hm.management.user;
 
 import javax.ws.rs.core.Response;
 

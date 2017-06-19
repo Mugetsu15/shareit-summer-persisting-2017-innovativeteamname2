@@ -2,11 +2,8 @@
 
 Developer: Gabl, Daniel<br />
 Deployment: [Heroku](https://innovative-teamname-persist.herokuapp.com/)<br />
-Project Status: 95%<br />
-ToDo:<br />
-\- Tests are not allowed to fail because of NullPointerExceptions (missing Injection)<br />
-\- Deploy on Heroku (fails because of the tests)
-
+Project Status: 99%<br />
+ToDo: - Database should not be cleared after shutdown
 
 URI-Template|Verb|Wirkung
  -|-|-

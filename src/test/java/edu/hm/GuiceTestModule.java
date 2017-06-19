@@ -1,4 +1,4 @@
-package edu.hm.test.management.persistence;
+package edu.hm;
 
 import com.google.inject.AbstractModule;
 

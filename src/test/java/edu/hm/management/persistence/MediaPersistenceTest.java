@@ -1,8 +1,9 @@
-package edu.hm.test.management.persistence;
+package edu.hm.management.persistence;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import edu.hm.GuiceTestModule;
 import edu.hm.management.bib.Fsk;
 import edu.hm.management.bib.IMediaService;
 import edu.hm.management.bib.MediaResource;
@@ -24,8 +25,6 @@ import javax.inject.Inject;
  * Tests for the Persistence.
  */
 public class MediaPersistenceTest {
-
-    private static final Injector INJECTOR = Guice.createInjector(new GuiceTestModule());
     
     @Inject
     private IMediaPersistence database;
@@ -42,16 +41,10 @@ public class MediaPersistenceTest {
      */
     @Before
     public void setUp() throws Exception {
-        database = new MediaPersistenceImpl();
+        Guice.createInjector(new GuiceTestModule()).injectMembers(this);
+        
         service = new MediaServiceImpl(database);
         resource = new MediaResource(service, tokenService);
-    }
-    
-    /**
-     * Constructor for Test Class.
-     */
-    public MediaPersistenceTest() {
-        INJECTOR.injectMembers(this);
     }
     
     private final Book bk1 = new Book("Author-909-4", "978-1-56619-909-4", "Title-909-4");
@@ -77,7 +70,7 @@ public class MediaPersistenceTest {
     @Test
     public void testPersistDisc() {
         database.persistDisc(ds1);
-        assertEquals(1, database.getBooks().length);
+        assertEquals(1, database.getDiscs().length);
     }
     
     /**
@@ -89,9 +82,9 @@ public class MediaPersistenceTest {
         Book[] books = database.getBooks();
         assertEquals(0, books.length);
         
-        books = database.getBooks();
         database.persistBook(bk1);
         database.persistBook(bk2);
+        books = database.getBooks();
         assertEquals(2, books.length);
     }
     
@@ -104,9 +97,9 @@ public class MediaPersistenceTest {
         Disc[] discs = database.getDiscs();
         assertEquals(0, discs.length);
         
-        discs = database.getDiscs();
         database.persistDisc(ds1);
         database.persistDisc(ds2);
+        discs = database.getDiscs();
         assertEquals(2, discs.length);
     }
     
