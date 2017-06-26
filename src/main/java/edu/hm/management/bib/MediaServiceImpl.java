@@ -44,7 +44,7 @@ public class MediaServiceImpl implements IMediaService {
     }
     
     /**
-     * Checks if a given ISBN number is valid or not
+     * Checks if a given ISBN number is valid or not.
      * @param isbn ISBN number to check
      * @return true if valid, else false
      */
